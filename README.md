@@ -1,105 +1,126 @@
-# Santhosh Gandhi Claude Skills
+# Claude Plugin Builder
 
-A curated collection of Claude skills and plugins by [Santhosh Gandhi](https://github.com/isanthoshgandhi) — built from real-world experience developing production Claude plugins.
+> Build a complete Claude plugin in 23 guided steps — from raw idea to GitHub push.
 
-Every skill in this repo works on **claude.ai** and **Claude Code**. Install the entire collection with one command.
+A Claude skill by [Santhosh Gandhi](https://github.com/isanthoshgandhi) that interviews you, classifies your plugin type, generates all necessary files, and pushes them to your GitHub repo — with a single confirmation.
+
+Works on **claude.ai** (generates files as code blocks) and **Claude Code** (writes files + pushes automatically).
 
 ---
 
-## Install All Skills
+## Install
 
 ```bash
-claude plugin marketplace add https://github.com/isanthoshgandhi/santhosh-gandhi-claude-skills
-claude plugin install santhosh-gandhi-claude-skills
+claude plugin marketplace add https://github.com/isanthoshgandhi/claude-plugin-builder
+claude plugin install claude-plugin-builder
 ```
 
 ---
 
-## Skills Collection
+## What It Does
 
-| Skill | What It Does | Platform | Version |
-|---|---|---|---|
-| [claude-plugin-builder](skills/claude-plugin-builder/SKILL.md) | Build a complete Claude plugin in 23 guided steps — from idea to GitHub push | claude.ai + Claude Code | 1.0.0 |
+Building a Claude plugin means knowing SKILL.md format, agent architecture, `plugin.json`, `marketplace.json`, GitHub structure, SEO topics, and trigger phrase engineering — all at once, all correct on the first try.
 
-*More skills coming soon.*
+Claude Plugin Builder collapses that into a conversation.
+
+### 23-Step Pipeline
+
+| Phase | Steps | What Happens |
+|---|---|---|
+| Discovery | 1–7 | Vision, audience, goal, input, output, open source search, platform target |
+| Design | 8–10 | Output template, trigger phrases, plugin name + tagline |
+| Classify | 11–13 | Auto-classify type, dependency check, auto-generate SEO |
+| Generate | 14–19 | SKILL.md, agent file, scripts, plugin.json, marketplace.json, README |
+| Push | 20–23 | File review, error scenarios, confirm, push to GitHub |
+
+### Auto-Classification
+
+```
+SKILL        → Pure reasoning, works on claude.ai + Claude Code
+AGENT        → Requires Python/Bash/file system, Claude Code only
+SKILL+AGENT  → Skill for claude.ai, Agent extends it on Claude Code
+COMMANDS     → 3+ distinct named operations
+```
+
+### Auto-Generated SEO
+
+From your description alone, the skill generates:
+- GitHub topics (8–10 kebab tags)
+- Repo description
+- marketplace.json description
+- README headline
 
 ---
 
-## Skill Spotlight — Claude Plugin Builder
+## Example Output
 
-**The problem:** Building a Claude plugin requires knowing SKILL.md format, agent architecture, `plugin.json`, `marketplace.json`, GitHub structure, SEO topics, trigger phrase engineering — and getting all of it right on the first try.
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CLAUDE PLUGIN BUILDER
+Build a stock analysis skill
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CLASSIFICATION
+Type:       SKILL + AGENT
+Compatible: claude.ai (Skill) + Claude Code (Agent)
+Reason:     Requires yfinance + file output
 
-**The solution:** A 23-step guided interview that takes your raw idea and produces a fully deployed, marketplace-ready Claude plugin.
+OPEN SOURCE FOUND:
+① yfinance — Yahoo Finance data via Python
+② pandas — data manipulation and tabular output
 
-### What it does
-1. Interviews you across 5 phases: Discovery → Design → Classify → Generate → Push
-2. Searches GitHub/PyPI for existing open source you can leverage
-3. Infers UX flow, data flow, and output template from your answers
-4. Auto-classifies: Skill / Agent / Skill+Agent / Commands
-5. Auto-generates SEO topics and marketplace descriptions
-6. Generates all files: `SKILL.md`, agent `.md`, scripts, `plugin.json`, `marketplace.json`, `README.md`
-7. Pushes to your GitHub repo with a single confirmation
+FILES TO BE GENERATED:
+├── .claude-plugin/plugin.json
+├── .claude-plugin/marketplace.json
+├── skills/stock-analyzer/SKILL.md
+├── agents/stock-analyzer.md
+├── scripts/fetch_data.py
+└── README.md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Confirm push? (yes/no)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ PUSHED
+Install: claude plugin marketplace add https://github.com/you/stock-analyzer
+         claude plugin install stock-analyzer
+Topics to add: claude-plugin, stock-analysis, finance, yfinance, claude-code
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
 
-### Example trigger phrases
+---
+
+## Trigger Phrases
+
 - *"Build me a Claude plugin that..."*
 - *"I want to create a Claude skill for..."*
 - *"Help me make a new agent"*
 - *"How do I structure a Claude plugin?"*
 - *"New plugin"*
+- *"Plugin builder"*
+- *"Create a skill"*
 
-### Output preview
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CLAUDE PLUGIN BUILDER  ·  CLASSIFICATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Type:       SKILL + AGENT
-Compatible: claude.ai (Skill) + Claude Code (Agent)
-Reason:     Requires Python scripts for file generation and git push
+---
 
-FILES TO BE GENERATED:
-├── .claude-plugin/plugin.json
-├── .claude-plugin/marketplace.json
-├── skills/[name]/SKILL.md
-├── agents/[name].md
-└── README.md
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✓ PUSHED
-Install: claude plugin marketplace add [your-repo]
-         claude plugin install [name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+## Platform Behaviour
+
+| Feature | claude.ai | Claude Code |
+|---|---|---|
+| 23-step interview | ✓ | ✓ |
+| File generation | As code blocks | Written to disk |
+| Auto push to GitHub | ✗ | ✓ |
+| Agent + script generation | ✓ | ✓ |
+| Open source search | ✓ | ✓ |
 
 ---
 
 ## Built From Experience
 
-This collection is built from direct experience developing production Claude plugins — learning what works in the real plugin ecosystem.
+Built from direct experience developing production Claude plugins — learning what actually works in the real plugin ecosystem.
 
-Key lessons applied to every skill here:
-- `description:` frontmatter = activation trigger, not a description
+Key principles applied throughout:
+- `description:` frontmatter = activation trigger, not a label
 - Output template design matters more than pipeline complexity
-- Platform detection (claude.ai vs Claude Code) must be handled explicitly
+- Platform detection must be handled explicitly, not assumed
 - Confirmation gates before every irreversible action
 - Windows-compatible paths throughout
-
----
-
-## Adding More Skills
-
-This repo is structured for growth. Each new skill lives in its own folder:
-
-```
-santhosh-gandhi-claude-skills/
-├── .claude-plugin/
-│   ├── plugin.json        ← update version + add skill path
-│   └── marketplace.json   ← update version
-├── skills/
-│   ├── claude-plugin-builder/
-│   │   └── SKILL.md
-│   └── [next-skill]/      ← add here
-│       └── SKILL.md
-└── README.md              ← add row to skills table
-```
 
 ---
 

@@ -1,13 +1,13 @@
 {
-  "name": "santhosh-gandhi-claude-skills",
+  "name": "claude-plugin-builder",
   "version": "1.0.0",
-  "description": "Claude skills collection by Santhosh Gandhi — plugin builder, foresight, and more.",
+  "description": "Build complete Claude plugins in 23 guided steps — from idea to GitHub push.",
   "author": "isanthoshgandhi",
-  "repository": "https://github.com/isanthoshgandhi/santhosh-gandhi-claude-skills",
+  "repository": "https://github.com/isanthoshgandhi/claude-plugin-builder",
   "plugins": [
     {
-      "name": "santhosh-gandhi-claude-skills",
-      "description": "Claude skills collection by Santhosh Gandhi — plugin builder, foresight, and more.",
+      "name": "claude-plugin-builder",
+      "description": "Build complete Claude plugins in 23 guided steps — from idea to GitHub push.",
       "version": "1.0.0",
       "path": "."
     }
