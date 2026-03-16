@@ -294,12 +294,20 @@ Generate Python/Bash script stubs for each step that requires code execution. In
   "name": "[kebab-case-name]",
   "version": "1.0.0",
   "description": "[tagline from Step 10b]",
-  "author": "[github-username]",
-  "skills": ["skills/[name]/SKILL.md"],
+  "author": {
+    "name": "[Full Name]",
+    "email": "[email]"
+  },
+  "homepage": "[github-repo-url]",
+  "repository": "[github-repo-url]",
+  "license": "MIT",
+  "skills": ["skills/[name]"],
   "agents": [],
   "commands": []
 }
 ```
+
+**CRITICAL:** `"repository"` field is required for GitHub URL installation to work. Never omit it.
 
 ### Step 18 — Generate `marketplace.json`
 
