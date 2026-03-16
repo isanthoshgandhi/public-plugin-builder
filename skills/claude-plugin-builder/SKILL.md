@@ -323,14 +323,19 @@ Generate Python/Bash script stubs for each step that requires code execution. In
 
 ### Step 19 — Generate `README.md`
 
-Include:
-- Plugin name + tagline
-- One-paragraph description
-- Install commands (Claude Code path + claude.ai manual path)
-- Output preview (use the template from Step 8)
-- Example usage
-- Dependencies (if Agent)
-- Methodology (brief, 3–5 bullets)
+Write as an **instruction manual**, not a technical spec. Structure:
+1. Plugin name + tagline + one-line who-it's-for
+2. Install command
+3. **How to Use** — one section per use case, each formatted as:
+   - `### [User question ending in ?]` (e.g., "Evaluating a startup?")
+   - Bold one-liner: what they get
+   - Example prompt in blockquote
+   - What the output includes
+   - Command(s) to invoke
+4. Two Modes table (Skill vs Agent — plain English comparison)
+5. What's Inside — "Inspired From" table with columns: Category | Inspired From | Learnings
+6. Repository structure
+7. License
 
 ---
 
@@ -457,3 +462,10 @@ Topics to add manually on GitHub:
 **Naming rules:**
 - Use gerund form consistently: `soft-screening-startup` / `hard-screening-startup` (not `screen` vs `screening`)
 - Command names must match the agent/skill name exactly
+
+**README rules:**
+- Write README as an instruction manual, not a technical spec — structure it around questions real users ask ("Evaluating a startup?", "Confused by a term sheet?"), not around internal architecture
+- Each section = one user question → one example prompt → what they get → the command to use
+- marketplace.json description must follow the same HOW TO USE bullet format: "Doing X? → Describe it and get Y"
+- Open-source acknowledgment table uses columns: Category | Inspired From | Learnings — never "Tools Used" or "What Was Extracted"
+- Capability count order in all descriptions: "X skills · Y agents · Z commands" (skills first, commands last)
