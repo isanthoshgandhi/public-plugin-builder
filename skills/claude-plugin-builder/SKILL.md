@@ -1,5 +1,6 @@
 ---
 name: claude-plugin-builder
+category: development-architecture
 description: >
   Activate when the user wants to build a Claude plugin, create a Claude skill,
   make a Claude agent, structure a Claude Code plugin, says "build a plugin",
