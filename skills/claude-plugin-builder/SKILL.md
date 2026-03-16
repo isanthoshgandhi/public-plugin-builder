@@ -556,6 +556,7 @@ Topics to add manually on GitHub:
 **Naming rules:**
 - Use gerund form consistently: `soft-screening-startup` / `hard-screening-startup` (not `screen` vs `screening`)
 - Command names must match the agent/skill name exactly
+- **Reserved words** — the following words CANNOT appear anywhere in a skill `name:` field or the upload validator will reject it: `claude`, `anthropic`. Use alternatives: `private-plugin-builder` not `private-claude-plugin-builder`, `plugin-builder` not `claude-plugin-builder` when naming user-facing skills.
 
 **README rules:**
 - Write README as an instruction manual, not a technical spec — structure it around questions real users ask ("Evaluating a startup?", "Confused by a term sheet?"), not around internal architecture
