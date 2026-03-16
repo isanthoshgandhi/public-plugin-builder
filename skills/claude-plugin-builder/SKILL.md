@@ -57,19 +57,60 @@ Ask:
 Ask:
 > "What does the plugin produce? Describe the ideal output — a structured report, a code file, a plan, a recommendation, a score, a summary?"
 
-### Step 6 — Existing Open Source Research
+### Step 6 — Open Source Research + Affinity Mapping
+
 Ask:
 > "Do you know of any existing libraries, APIs, or tools that could power parts of this?"
 
-Then **actively search GitHub and PyPI** for relevant open source options based on the vision from Step 1. Surface top 2–3 options with one-line summaries:
+Then **actively read ALL relevant source repos** before designing anything. Surface top 3–5 options:
 ```
 OPEN SOURCE OPTIONS FOUND:
-① [library-name] — [what it does, one line]
-② [library-name] — [what it does, one line]
-③ [library-name] — [what it does, one line]
+① [library-name] (⭐ stars) — [what it does, one line]
+② [library-name] (⭐ stars) — [what it does, one line]
+③ [library-name] (⭐ stars) — [what it does, one line]
 
 → Do you want to use any of these, or build from scratch?
 ```
+
+**CRITICAL: Read before designing.** Read ALL source repos BEFORE proposing architecture. Jumping to structure without reading produces a guess, not a design. If caught doing this, start over.
+
+Apply the **Open Source Reuse Framework** — every tool found falls into exactly one tier:
+
+```
+TIER 1 — CALLABLE LIBRARY
+  pip install / npm install works → wrap in Python script in agent
+  Examples: FinanceToolkit, groveco/cohort-analysis, saas-metrics
+
+TIER 2 — EXTRACTABLE KNOWLEDGE
+  Reference doc, markdown guide, template, or curated list
+  → extract taxonomy, rubric, formula, schema
+  → embed directly in SKILL.md prompt body — NOT a separate file
+  Examples: YC SAFE templates (legal taxonomy),
+            joelparkerhenderson/startup-assessment (8-dimension rubric),
+            wizenheimer/subsignal (6-signal type taxonomy),
+            Open-Cap-Table-Coalition/OCF (cap table JSON schema standard)
+
+TIER 3 — PATTERN ONLY
+  Full deployable application (own UI, database, auth) → can't wrap or install
+  → extract only: data model fields, KPI taxonomy, workflow pattern, output format
+  Examples: Twenty CRM (deal pipeline fields), Metabase (dashboard KPI layout),
+            Carta/captable.io (OCF schema compatibility)
+```
+
+**RULE: Never try to wrap a Tier 3 tool.** It will fail. Extract its schema and embed as knowledge.
+**RULE: Tier 2 knowledge lives in the prompt body.** Never make it a separate file that could drift.
+
+After reading sources, do an **affinity mapping** — group tools by HOW they solve, not WHAT domain:
+```
+AFFINITY CLUSTERS (by solution pattern):
+  Pure reasoning + judgment + narrative  →  SKILL
+  Python computation + formulas + data   →  AGENT
+  Named composable operation             →  COMMAND
+  Taxonomy / schema / rubric / guide     →  embed in SKILL.md prompt body
+  Full application (not callable)        →  extract pattern/schema only
+```
+
+Show the clusters to the user before designing. Ask: *"Does this grouping match your mental model? Anything misclassified?"*
 
 ### Step 7 — Platform Target
 Ask:
@@ -385,10 +426,34 @@ Topics to add manually on GitHub:
 
 ## RULES
 
+**Process rules:**
 - Never skip a confirmation step
 - Never push without explicit "yes" from the user
 - Never auto-fill GitHub token, API keys, or credentials
-- If classified as AGENT but platform is claude.ai → downgrade to SKILL + warn user
 - Always show generated file content before writing to disk
-- On Windows: use `python` not `python3`, use backslash paths in scripts
 - If repo already has files → check before overwriting, ask user to confirm
+- On Windows: use `python` not `python3`, use backslash paths in scripts
+
+**Architecture rules (learned from real builds):**
+- Read ALL source repos BEFORE proposing any architecture — never design from assumption
+- Affinity map by solution pattern first, workflow phase second
+- Dual-mode parity: every high-value capability deserves both a Skill (soft, claude.ai) and an Agent (hard, Claude Code)
+- If classified as AGENT but platform is claude.ai → downgrade to SKILL + warn user
+- Plugin description must include capability count: "X skills · Y agents · Z commands"
+
+**Agent script rules:**
+- Python scripts do computation only — no external API keys, no pip install of heavy dependencies
+- Claude is the intelligence layer (web search, reasoning, JSON extraction)
+- Python is the computation layer (formulas, scoring, formatting)
+- Every agent has a `report_formatter.py` as the LAST step — it reads all JSON outputs and prints the final report. Computation and presentation are always separate scripts.
+- All scripts: JSON in → compute → JSON out. Claude reads stdout between steps.
+- Script paths always use `${CLAUDE_PLUGIN_ROOT}` — never hardcode local paths
+
+**Knowledge embedding rules:**
+- Taxonomies, rubrics, benchmarks, legal templates, stage thresholds → go in SKILL.md prompt body, NOT separate files
+- Tier 2 knowledge (extractable from repos/docs) is more valuable embedded in the prompt than as a callable tool
+- Industry-standard schemas (e.g., Open Cap Format / OCF) become the input contract for agents — use them
+
+**Naming rules:**
+- Use gerund form consistently: `soft-screening-startup` / `hard-screening-startup` (not `screen` vs `screening`)
+- Command names must match the agent/skill name exactly
