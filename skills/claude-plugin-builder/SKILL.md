@@ -632,3 +632,33 @@ Does it run Python?
   YES + auto-trigger only     → agents/[name].md + agents/[name]/scripts/
   NO                          → skills/[name]/SKILL.md (pure reasoning)
 ```
+
+**Naming consistency rules (naming drift kills trust):**
+- Pick ONE canonical name at creation. Use it everywhere without exception:
+  - GitHub repo URL → `github.com/user/foresight-intelligence`
+  - README `# Title` → `# Foresight Intelligence`
+  - Install command → `claude plugin install foresight-intelligence`
+  - Explicit trigger → `/foresight-intelligence:skill-name`
+  - Report header inside output template → `FORESIGHT INTELLIGENCE`
+  - GitHub About description → starts with the plugin name
+- A user following the README who hits a broken install command (wrong repo name) abandons on day one. There is no recovery from a broken first install.
+- Before pushing, do a final grep: `grep -r "foresight-engine" .` — any hit means naming drift exists.
+
+**Semantic capability count rules (structure ≠ meaning):**
+- "X skills · Y agents" is a SEMANTIC count, not a folder count:
+  - **Skills** = pure Claude reasoning, no Python, works on claude.ai + Claude Code
+  - **Agents** = Python scripts required, Claude Code only
+- Moving an agent into `skills/` folder for slash-command access does NOT make it a "skill" semantically. The capability count stays `Y agents`.
+- GitHub About description, README intro line, marketplace.json description, and plugin.json description must ALL use the same semantic count.
+- Never inflate or deflate: "9 skills" when 6 run Python is wrong. "3 skills · 6 agents" when 6 use scripts is correct.
+
+**Multi-repo sync rules:**
+- Every plugin typically lives in 4 places: public repo, private umbrella, community fork (buildwithclaude PR branch), and local clone. Any change to one must be synced to all others immediately — not batched.
+- Sync order: fix public repo first → copy to private umbrella → copy to fork → push all three in one session.
+- Never assume the umbrella or fork is "close enough" — they hold real copies, not symlinks.
+- After any README, marketplace.json, or plugin.json change: run a final check that all 4 copies match before closing the session.
+
+**LICENSE rules:**
+- Every public plugin repo MUST have a LICENSE file. No LICENSE = legal ambiguity for anyone who wants to fork, adapt, or build on the plugin.
+- Default: MIT License. Generate it at Step 20 alongside the file tree review — do not leave it for later.
+- Sync LICENSE to private umbrella and community fork at the same time as the public repo.
