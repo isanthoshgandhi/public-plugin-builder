@@ -1,15 +1,28 @@
 {
-  "name": "claude-plugin-builder",
-  "version": "1.0.0",
-  "description": "Build complete Claude plugins in 23 guided steps — from idea to GitHub push.",
-  "author": "isanthoshgandhi",
-  "repository": "https://github.com/isanthoshgandhi/claude-plugin-builder",
+  "name": "isanthoshgandhi",
+  "owner": {
+    "name": "Santhosh Gandhi",
+    "email": "isanthoshgandhi@gmail.com"
+  },
+  "metadata": {
+    "description": "Claude plugin builder skill by Santhosh Gandhi.",
+    "version": "1.0.0"
+  },
   "plugins": [
     {
       "name": "claude-plugin-builder",
-      "description": "Build complete Claude plugins in 23 guided steps — from idea to GitHub push.",
+      "source": "./",
+      "description": "Build complete Claude plugins in 23 guided steps — from idea to GitHub push. Interviews you, classifies skill vs agent, generates all files, pushes to your repo.",
       "version": "1.0.0",
-      "path": "."
+      "author": {
+        "name": "Santhosh Gandhi",
+        "email": "isanthoshgandhi@gmail.com"
+      },
+      "homepage": "https://github.com/isanthoshgandhi/claude-plugin-builder",
+      "repository": "https://github.com/isanthoshgandhi/claude-plugin-builder",
+      "license": "MIT",
+      "keywords": ["claude-plugin", "claude-code", "anthropic", "plugin-builder", "skill-creator", "developer-tools", "ai-tools", "claude-skills", "plugin-development", "scaffold"],
+      "category": "developer-tools"
     }
   ]
 }
