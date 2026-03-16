@@ -642,7 +642,7 @@ Does it run Python?
   - Report header inside output template → `FORESIGHT INTELLIGENCE`
   - GitHub About description → starts with the plugin name
 - A user following the README who hits a broken install command (wrong repo name) abandons on day one. There is no recovery from a broken first install.
-- Before pushing, do a final grep: `grep -r "foresight-engine" .` — any hit means naming drift exists.
+- Before pushing, do a final grep for any old or alternate name: `grep -r "[old-name]" .` — any hit means naming drift exists.
 
 **Semantic capability count rules (structure ≠ meaning):**
 - "X skills · Y agents" is a SEMANTIC count, not a folder count:
