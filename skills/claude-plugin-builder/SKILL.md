@@ -477,3 +477,11 @@ Topics to add manually on GitHub:
 - marketplace.json description must follow the same HOW TO USE bullet format: "Doing X? → Describe it and get Y"
 - Open-source acknowledgment table uses columns: Category | Inspired From | Learnings — never "Tools Used" or "What Was Extracted"
 - Capability count order in all descriptions: "X skills · Y agents · Z commands" (skills first, commands last)
+
+**Community marketplace rules (buildwithclaude / davepoon/buildwithclaude):**
+- Every agent `.md` file MUST have `category:` in its frontmatter — without it the marketplace validator rejects the plugin
+- Valid category for VC/finance/business agents: `business-finance`
+- `plugin.json` author field must use `"url"` not `"email"`: `{"name": "...", "url": "https://github.com/username"}`
+- Personal plugin repos (one repo per plugin on GitHub) hit a marketplace key collision when a user has more than one — the system uses the GitHub username as the key, so only one repo per user can be registered as a marketplace at a time
+- The long-term fix is an umbrella marketplace repo (`username/claude-plugins`) with a `plugins/` folder containing all plugins as subfolders — but this creates a dual-maintenance burden; individual repos stay for discoverability, umbrella is the install entrypoint
+- For now: guide users to submit to `davepoon/buildwithclaude` via PR so their plugin is installable from the community marketplace without the personal collision problem
