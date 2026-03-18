@@ -627,10 +627,84 @@ Does it run Python?
 - Before pushing, grep for any old or alternate name: `grep -r "[old-name]" .` — any hit means naming drift exists.
 
 **Semantic capability count rules:**
-- "X skills · Y agents" is a SEMANTIC count, not a folder count
-- Skills = pure Claude reasoning, no Python, works on claude.ai + Claude Code
-- Agents = Python scripts required, Claude Code only
-- Moving an agent into `skills/` for slash-command access does NOT make it a "skill" semantically
+- Always use this exact format: **"X Claude Reasoning Only Skills · Y Reasoning + Python Scripts Skills · Totally X+Y Skills"**
+  - Claude Reasoning Only = pure Claude reasoning, no Python, works on claude.ai + Claude Code
+  - Reasoning + Python Scripts = Claude reasoning + Python computation, Claude Code only
+- This format replaces the old "X skills · Y agents" convention.
+- Moving a Python skill into `skills/` for slash-command access does NOT change its semantic type.
+- GitHub About, README intro, marketplace.json, and plugin.json must ALL use the same format. Never inflate or deflate counts.
+
+**Information Architecture (IA) rule — large plugins (20+ skills):**
+- Before generating any SKILL.md file, build and agree on a Feature IA document first. IA = the full list of skills grouped by phase → sub-category → skill name, with type (Reasoning Only / Reasoning+Python) and trigger phrase per skill.
+- IA is the contract. Generate files only after the IA is MECE-validated. Generating files before IA is confirmed causes structural rewrites, renamed skills, and wasted generation cycles.
+- IA format per skill row: `Phase | Sub-Category | Skill Name | Type | Primary Trigger Phrase | Input Data Types`
+- For multi-phase plugins: run MECE twice — first within each phase, then across phases — before declaring IA final.
+- The methodology suggester (or equivalent orchestrator skill) is the IA validation test harness: run all trigger phrases through it and confirm correct skill routes before building.
+
+**Data Pipeline rule — input data taxonomy per skill:**
+- Every skill must declare its input data types before its SKILL.md is written. Define a MECE input taxonomy at the start of the project (Step 6), mapped to the plugin's domain. Example for a research plugin: Context, Stakeholder Data, Qualitative Text, Behavioral Data, Survey Responses, Design Artifacts, Post-Launch Data, Competitive Intelligence.
+- The input taxonomy drives two key decisions for each skill: (1) what intake questions the skill asks the user, (2) whether `context: fork` is appropriate (deterministic quant pipelines = YES; qual/synthesis/orchestration = NO).
+- The taxonomy becomes the data layer of the IA document — every skill row declares which data types it needs.
+- For orchestrator skills (triangulation, suggester): collect common data once using the taxonomy as the intake schema, then route to individual method skills without re-asking.
+
+**Visual output design system rule:**
+- Before writing any SKILL.md for a multi-skill plugin, lock a canonical visual design system that ALL skills follow. Commit to one aesthetic direction — not generic AI prose output.
+- For text-based (Claude Code terminal) plugin output, the design system should define:
+  - Major section break characters (e.g., `━━━━━━━━━━`) vs sub-section breaks (e.g., `─────────`)
+  - Step prefix format (e.g., `STEP 01 / 06`) so user always knows where they are in the pipeline
+  - Warning indicator (e.g., `⚠`) used ONLY for validation warnings — never for general notes
+  - Scoring/priority display (e.g., `████████░░` progress bars) for scannable at-a-glance reading
+  - Findings format (e.g., `PATTERN 01`, `PATTERN 02`) — never unstructured bullet soup
+  - `WHAT'S NEXT` block at the end of every output — always last
+- The design system lives as a `## OUTPUT DESIGN RULES` section inside the plugin's main SKILL.md (entry point skill) and is referenced by all other skills. Do not repeat it in every SKILL.md.
+
+**Self-navigating output rule:**
+- Every skill's `WHAT'S NEXT` block must name specific related skills with their exact slash commands. Example:
+  ```
+  WHAT'S NEXT
+  Consider also →  Funnel Drop-off Analysis  ·  Session Recording Analysis
+  Full plan    →  /plugin-name:research-plan-guide
+  Triangulate  →  /plugin-name:triangulation
+  ```
+- Method Validation (Step 2) must name the exact replacement skill when routing the user away: "Switch to → `/plugin-name:skill-name`"
+- This makes the plugin self-navigating: users discover related capabilities from the output itself, not just from the README.
+
+**Step 2 smart validation pattern (universal across all pipeline skills):**
+- Method Validation step in any multi-step pipeline must follow this logic:
+  ```
+  IF user-stated method ≠ best method for their goal/data:
+    WARN → name the better method → offer exact skill command to switch → allow bypass
+    IF bypass: proceed, note "Override" in Synthesis output as a limitation
+
+  IF user data doesn't match this skill's required input type:
+    WARN → name what's missing → offer where to get it or run partial → never block
+
+  IF data fits AND method fits:
+    Confirm silently and proceed — no friction
+  ```
+- Never build a separate generic validation skill — validation context lives inside each method skill where the domain knowledge is.
+- Always allow bypass. Researchers override tools for legitimate reasons. A tool that blocks loses trust permanently.
+
+**Meta cluster architecture (large multi-phase plugins):**
+- For plugins with 20+ skills organized in phases, add a META / START HERE cluster above the phase structure:
+  ```
+  META / START HERE
+    Orchestrators, suggesters, and plan generators that route users to phase skills.
+    Examples: methodology-suggester, triangulation, research-plan-guide
+
+  PHASE CLUSTERS (Discovery, Design, After Delivery, etc.)
+    Phase → sub-category (Qual/Quant) → individual method skills (leaf nodes)
+  ```
+- Meta cluster skills do NOT use `context: fork` — they need conversation state to route users and carry context.
+- Phase skills may use `context: fork` if they are deterministic quant pipelines.
+
+**Research Plan Guide pattern:**
+- A "plan guide" skill absorbs method-suggestion logic internally but produces a downloadable plan document, not just a recommendation. It is separate from a standalone methodology suggester — users who only want method selection use that directly.
+- Works from any entry scenario:
+  - Cold start (no method known): infers methods, flags triangulation need, builds full plan
+  - Method known: skips suggestion, validates fit, builds plan around chosen method
+  - Wrong method: warns + explains, allows bypass, builds plan with override noted
+- Output is a structured text template (Background, Research Questions, Method(s), Participant Criteria, Timeline, Deliverables, Stakeholders) designed to be copy-pasted into a doc and shared with stakeholders.
 
 **LICENSE rules:**
 - Every public plugin repo MUST have a LICENSE file. Default: MIT. Generate it at Step 20.
